@@ -3,7 +3,7 @@
 #include <string>
 
 void printUsage() {
-    std::cerr << "Usage: ./converter -m <input_video> <output_audio>\n";
+    std::cerr << "Usage: ./converter -v -m <input_video> <output_audio>\n";
 }
 
 int main(int argc, char* argv[]) {
@@ -15,7 +15,14 @@ int main(int argc, char* argv[]) {
     std::string inputFile = argv[2];
     std::string outputFile = argv[3];
 
+    bool verbose = false;
+    if (argc == 5 && std::string(argv[4]) == "-v") {
+	verbose = true;
+    }
     std::string command = "ffmpeg -i " + inputFile + " -vn -acodec libmp3lame -q:a 2 " + outputFile;
+    if (verbose) {
+	command += " 2>&1"; // Перенаправить stderr в stdout для отображения прогресса
+    }
 
     int result = system(command.c_str());
 
